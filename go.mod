@@ -4,9 +4,8 @@ go 1.18
 
 require (
 	github.com/nsqio/go-nsq v1.1.0
-	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.13.0
-	go.uber.org/dig v1.15.0
+	gopkg.in/mail.v2 v2.3.1
 )
 
 require (
@@ -24,6 +23,7 @@ require (
 	github.com/subosito/gotenv v1.4.1 // indirect
 	golang.org/x/sys v0.1.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

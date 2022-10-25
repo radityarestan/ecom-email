@@ -1,24 +1,28 @@
 package di
 
 import (
-	"github.com/radityarestan/ecom-email/internal/shared/config"
-	"go.uber.org/dig"
+	"github.com/radityarestan/ecom-email/internal/config"
+	"github.com/radityarestan/ecom-email/internal/pkg"
 )
 
-var (
-	Container = dig.New()
-)
+type Deps struct {
+	Config      *config.Config
+	NSQConsumer *pkg.NSQConsumer
+}
 
-func init() {
-	if err := Container.Provide(config.NewConfig); err != nil {
-		panic(err)
+func InitDeps() (*Deps, error) {
+	config, err := config.NewConfig()
+	if err != nil {
+		return nil, err
 	}
 
-	if err := Container.Provide(NewLogger); err != nil {
-		panic(err)
+	nsqConsumer, err := NewNSQConsumer(config)
+	if err != nil {
+		return nil, err
 	}
 
-	if err := Container.Provide(NewNSQConsumer); err != nil {
-		panic(err)
-	}
+	return &Deps{
+		Config:      config,
+		NSQConsumer: nsqConsumer,
+	}, nil
 }

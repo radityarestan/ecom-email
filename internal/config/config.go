@@ -13,8 +13,14 @@ type NSQConfig struct {
 	Channel2 string `mapstructure:"CHANNEL2"`
 }
 
+type SenderConfig struct {
+	Email    string `mapstructure:"EMAIL"`
+	Password string `mapstructure:"PASSWORD"`
+}
+
 type Config struct {
-	NSQ NSQConfig `mapstructure:"NSQ"`
+	Sender SenderConfig `mapstructure:"SENDER"`
+	NSQ    NSQConfig    `mapstructure:"NSQ"`
 }
 
 func NewConfig() (*Config, error) {

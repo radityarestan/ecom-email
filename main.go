@@ -2,30 +2,29 @@ package main
 
 import (
 	"github.com/radityarestan/ecom-email/internal/di"
-	"github.com/radityarestan/ecom-email/internal/shared"
+	"log"
 	"os"
 	"os/signal"
 )
 
 func main() {
-	var container = di.Container
-
-	err := container.Invoke(func(deps shared.Deps) error {
-		var sig = make(chan os.Signal, 1)
-
-		signal.Notify(sig, os.Interrupt)
-
-		go func() {
-			deps.Logger.Info("Starting NSQ Consumer")
-		}()
-
-		<-sig
-		deps.Close()
-
-		return nil
-	})
-
+	deps, err := di.InitDeps()
 	if err != nil {
-		panic(err)
+		log.Fatalf("[FATAL] Failed to inject dependency: %v", err)
+		return
 	}
+
+	go func() {
+		log.Println("[INFO] Starting Ecommerce Service Consumer")
+		if err := deps.NSQConsumer.Start(deps.Config.Sender.Email, deps.Config.Sender.Password); err != nil {
+			log.Fatalf("[FATAL] Failed to start NSQ Consumer: %v", err)
+		}
+	}()
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	<-c
+
+	deps.NSQConsumer.Stop()
+	log.Println("[INFO] Ecommerce Email Service Consumer Stopped")
 }
